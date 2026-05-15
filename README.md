@@ -1,65 +1,95 @@
-# Expense Tracker API
+# Expense Tracker
 
-RESTful ASP.NET Core Web API plus Razor frontend for tracking employee expenses, applying categories, and analyzing spending patterns.
+Expense Tracker is an ASP.NET Core web app that combines a REST API with a Razor UI for managing employee expenses. It stores data in a JSON file, supports filtering and pagination, and includes summary analytics for quick spending insight.
 
-## Features
+## Highlights
 
-- Create, read, update, and delete expenses
-- Razor dashboard, create form, and edit form
-- JSON file persistence with automatic load and save behavior
-- Seeded sample values on startup for the local app
-- Filtering by category, date range, and title search
-- Sorting by date or amount
-- Pagination controls in the dashboard
-- Expense summary endpoint with total, category totals, and monthly totals
-- Global exception middleware
-- Custom `ExpenseNotFoundException`
-- Async service and repository operations
+- Full expense CRUD through the API and the Razor UI
+- Dashboard with totals, category breakdowns, and monthly trends
+- Search, category filtering, date range filtering, sorting, and pagination
+- JSON file persistence with optional seed data on startup
+- Global exception handling and request logging middleware
+- Automated integration tests for the main expense workflows
 
-## Data Model
+## Screenshots
+
+### Home Dashboard
+![Home Dashboard](./Images/homepage.png)
+
+### Summary API
+![Summary API](./Images/Report.png)
+
+### Analytics Dashboard
+![Analytics Dashboard](./Images/Dashboard.png)
+
+## Tech Stack
+
+- .NET 10 / ASP.NET Core
+- Razor Views
+- REST API controllers
+- xUnit integration tests
+
+## Getting Started
+
+### Prerequisites
+
+- .NET 10 SDK
+
+### Restore and test
+
+```bash
+dotnet restore
+dotnet test ExpenseTracker.slnx
+```
+
+### Run the app
+
+```bash
+dotnet run --project ExpenseTracker.Api
+```
+
+Then open the app in your browser at the local URL shown by the terminal.
+
+## Configuration
+
+The app supports two useful settings in `ExpenseTracker.Api/appsettings.json` or `appsettings.Development.json`:
+
+- `ExpenseStorePath` controls where the JSON data file is stored.
+- `EnableSeedData` controls whether sample expenses are loaded on startup.
+
+By default, expenses are stored in `ExpenseTracker.Api/App_Data/expenses.json`.
+
+## API Endpoints
+
+### Expenses
+
+- `GET /expenses` - list expenses with query support
+- `GET /expenses/{id}` - get one expense
+- `POST /expenses` - create a new expense
+- `PUT /expenses/{id}` - update an expense
+- `DELETE /expenses/{id}` - delete an expense
+
+### Summary
+
+- `GET /expenses/summary` - expense totals by category and month
+
+## Razor Pages
+
+- `GET /` - dashboard
+- `GET /expenses/create` - create expense form
+- `GET /expenses/edit/{id}` - edit expense form
+
+## Expense Model
 
 - `Id` - `Guid`
 - `Title` - required
-- `Amount` - required, greater than zero
+- `Amount` - required and greater than zero
 - `Category` - `Food`, `Travel`, `Bills`, `Shopping`, `Other`
 - `ExpenseDate` - `DateTime`
 - `PaymentMode` - `Cash`, `Card`, `UPI`
 - `Notes` - optional
-- `CreatedAt` - auto-generated
+- `CreatedAt` - generated automatically
 
-## Endpoints
+## Verification
 
-- `GET /expenses`
-- `GET /expenses/{id}`
-- `POST /expenses`
-- `PUT /expenses/{id}`
-- `DELETE /expenses/{id}`
-- `GET /expenses/summary`
-- `GET /` Razor dashboard
-- `GET /expenses/create` Razor create page
-- `GET /expenses/edit/{id}` Razor edit page
-
-## Run
-
-```bash
-dotnet restore
-dotnet test
-dotnet run --project ExpenseTracker.Api
-```
-
-## Test Coverage
-
-- Add valid expense returns `201 Created`
-- Add invalid expense returns `400 Bad Request`
-- Get all expenses returns `200 OK`
-- Get missing expense returns `404 Not Found`
-- Delete expense returns `204 No Content`
-- Filter by category returns `200 OK`
-- Summary returns total expense calculation
-- Dashboard supports search, filtering, sorting, and pagination
-
-## Copilot Utilization Report
-
-- Used Copilot to scaffold the layered architecture and data contracts.
-- Used Copilot to draft the JSON-backed repository, exception middleware, and controller actions.
-- Used Copilot to generate the integration test suite and README structure, then adjusted the implementation to match the assignment rules.
+The solution builds and all tests pass with `dotnet test ExpenseTracker.slnx`.
