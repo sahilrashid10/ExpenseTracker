@@ -1,0 +1,50 @@
+@ExpenseTracker.Api_HostAddress = http://localhost:5083
+@ExpenseId = 00000000-0000-0000-0000-000000000000
+
+### Home dashboard route
+GET {{ExpenseTracker.Api_HostAddress}}/
+Accept: text/html
+
+### Get all expenses (supports filters via query)
+GET {{ExpenseTracker.Api_HostAddress}}/expenses
+Accept: application/json
+
+### Get summary
+GET {{ExpenseTracker.Api_HostAddress}}/expenses/summary
+Accept: application/json
+
+### Get expense by id
+GET {{ExpenseTracker.Api_HostAddress}}/expenses/{{ExpenseId}}
+Accept: application/json
+
+### Create expense
+POST {{ExpenseTracker.Api_HostAddress}}/expenses
+Content-Type: application/json
+
+{
+	"title": "Coffee",
+	"amount": 120,
+	"category": "Food",
+	"expenseDate": "2026-04-11T10:00:00Z",
+	"paymentMode": "UPI",
+	"notes": "Morning coffee"
+}
+
+### Update expense by id
+PUT {{ExpenseTracker.Api_HostAddress}}/expenses/{{ExpenseId}}
+Content-Type: application/json
+
+{
+	"title": "Coffee - updated",
+	"amount": 150,
+	"category": "Food",
+	"expenseDate": "2026-04-11T10:30:00Z",
+	"paymentMode": "Card",
+	"notes": "Updated note"
+}
+
+### Delete expense by id
+DELETE {{ExpenseTracker.Api_HostAddress}}/expenses/{{ExpenseId}}
+Accept: application/json
+
+###

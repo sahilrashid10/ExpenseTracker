@@ -1,0 +1,215 @@
+@model ExpenseDashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+
+    var categoryItems = Model.CategoryChart;
+    var monthlyItems = Model.MonthlyTrend;
+
+    var pieSegments = new List<string>();
+    var pieTotal = categoryItems.Sum(item => item.Amount);
+    var pieStart = 0m;
+
+    for (var index = 0; index < categoryItems.Count; index++)
+    {
+        var item = categoryItems[index];
+        var segmentSize = pieTotal == 0 ? 0 : item.Amount / pieTotal * 100;
+        var hue = 220 + (index * 55);
+        pieSegments.Add($"hsl({hue}, 85%, 55%) {pieStart:0.##}% {pieStart + segmentSize:0.##}%");
+        pieStart += segmentSize;
+    }
+
+    var pieGradient = pieSegments.Count == 0
+        ? "conic-gradient(from 180deg, #dbe5f2 0% 100%)"
+        : $"conic-gradient(from 180deg, {string.Join(", ", pieSegments)})";
+}
+
+<div class="dashboard-shell">
+    <section class="hero-panel mb-4">
+        <div class="dashboard-hero">
+            <div>
+                <p class="eyebrow">FinEdge analytics</p>
+                <h2>Expense intelligence at a glance.</h2>
+                <p class="text-muted mb-0">Track, filter, and understand spend patterns with a clean fintech SaaS dashboard.</p>
+            </div>
+            <div class="hero-actions">
+                <a class="btn btn-primary" href="/expenses/create">+ Add Expense</a>
+                <a class="btn btn-outline-secondary" href="/expenses/summary">View Summary API</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="kpi-grid mb-4">
+        <article class="kpi-card">
+            <span class="kpi-label">Total Expense</span>
+            <strong class="kpi-value">@Model.Summary.TotalExpense.ToString("C")</strong>
+            <span class="kpi-subtext">All tracked expenses</span>
+        </article>
+        <article class="kpi-card">
+            <span class="kpi-label">This Month Spend</span>
+            <strong class="kpi-value">@Model.ThisMonthSpend.ToString("C")</strong>
+            <span class="kpi-subtext">Current month total</span>
+        </article>
+        <article class="kpi-card">
+            <span class="kpi-label">Average Daily Spend</span>
+            <strong class="kpi-value">@Model.AverageDailySpend.ToString("C")</strong>
+            <span class="kpi-subtext">Based on active days</span>
+        </article>
+        <article class="kpi-card">
+            <span class="kpi-label">Top Category</span>
+            <strong class="kpi-value">@Model.TopCategory</strong>
+            <span class="kpi-subtext">@Model.TopCategoryAmount.ToString("C") spent</span>
+        </article>
+    </section>
+
+    <section class="chart-grid mb-4">
+        <article class="panel-card chart-card">
+            <div class="card-heading">
+                <div>
+                    <h3 class="panel-title mb-1">Category Pie Chart</h3>
+                    <p class="text-muted mb-0">Distribution of spend by category.</p>
+                </div>
+            </div>
+            <div class="pie-layout">
+                <div class="pie-chart" style="background:@pieGradient;"></div>
+                <div class="chart-legend">
+                    @for (var index = 0; index < categoryItems.Count; index++)
+                    {
+                        var item = categoryItems[index];
+                        var hue = 220 + (index * 55);
+                        <div class="legend-item">
+                            <span class="legend-swatch" style="background:hsl(@hue, 85%, 55%);"></span>
+                            <div class="legend-copy">
+                                <strong>@item.Name</strong>
+                                <span>@item.Amount.ToString("C")</span>
+                            </div>
+                            <span class="legend-percent">@item.SharePercent.ToString("0.#")%</span>
+                        </div>
+                    }
+                </div>
+            </div>
+        </article>
+
+        <article class="panel-card chart-card">
+            <div class="card-heading">
+                <div>
+                    <h3 class="panel-title mb-1">Monthly Trend Line</h3>
+                    <p class="text-muted mb-0">Spend evolution across recent months.</p>
+                </div>
+            </div>
+            <div class="trend-chart">
+                @for (var index = 0; index < monthlyItems.Count; index++)
+                {
+                    var item = monthlyItems[index];
+                    var hue = 220 + (index * 25);
+                    <div class="trend-point">
+                        <div class="trend-column">
+                            <div class="trend-line" style="height:@item.HeightPercent.ToString("0.##")%; background:linear-gradient(180deg, hsl(@hue, 85%, 58%), rgba(59, 130, 246, 0.15));"></div>
+                        </div>
+                        <span class="trend-label">@item.Label</span>
+                        <strong class="trend-value">@item.Amount.ToString("C")</strong>
+                    </div>
+                }
+            </div>
+        </article>
+    </section>
+
+    <section class="panel-card mb-4 filter-bar">
+        <form method="get" action="/" class="filter-grid">
+            <div class="filter-field filter-search">
+                <label class="form-label" for="Query_Search">Search</label>
+                <input class="form-control" id="Query_Search" name="Search" value="@Model.Query.Search" placeholder="Search by title" />
+            </div>
+            <div class="filter-field">
+                <label class="form-label" for="Query_Category">Category</label>
+                <select class="form-select" id="Query_Category" name="Category" asp-items="Html.GetEnumSelectList<ExpenseCategory>()">
+                    <option value="">All categories</option>
+                </select>
+            </div>
+            <div class="filter-field">
+                <label class="form-label" for="Query_SortBy">Sort</label>
+                <select class="form-select" id="Query_SortBy" name="SortBy">
+                    <option value="date" selected="@(string.IsNullOrWhiteSpace(Model.Query.SortBy) || Model.Query.SortBy == "date")">Date</option>
+                    <option value="amount" selected="@(Model.Query.SortBy == "amount")">Amount</option>
+                </select>
+            </div>
+            <div class="filter-field compact-date">
+                <label class="form-label" for="Query_FromDate">Date</label>
+                <input class="form-control" id="Query_FromDate" name="FromDate" type="date" value="@(Model.Query.FromDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="filter-field compact-date">
+                <label class="form-label" for="Query_ToDate">To</label>
+                <input class="form-control" id="Query_ToDate" name="ToDate" type="date" value="@(Model.Query.ToDate?.ToString("yyyy-MM-dd"))" />
+            </div>
+            <div class="filter-actions">
+                <button class="btn btn-outline-secondary" type="submit">Apply</button>
+                <a class="btn btn-primary" href="/expenses/create">+ Add Expense</a>
+            </div>
+        </form>
+    </section>
+
+    <section class="panel-card expenses-card">
+        <div class="card-heading">
+            <div>
+                <h3 class="panel-title mb-1">Recent Expenses</h3>
+                <p class="text-muted mb-0">Latest records shown in a compact, scannable table.</p>
+            </div>
+            <span class="text-muted small">@Model.Expenses.Count items</span>
+        </div>
+        <div class="table-responsive expense-table-wrap">
+            <table class="table expense-table align-middle">
+                <thead>
+                    <tr>
+                        <th>Title</th>
+                        <th>Category</th>
+                        <th>Date</th>
+                        <th>Amount</th>
+                        <th class="text-end">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var expense in Model.Expenses)
+                    {
+                        <tr>
+                            <td>
+                                <div class="expense-title">@expense.Title</div>
+                                <div class="text-muted small">@expense.PaymentMode</div>
+                            </td>
+                            <td><span class="badge rounded-pill text-bg-dark">@expense.Category</span></td>
+                            <td>@expense.ExpenseDate.ToString("dd MMM yyyy")</td>
+                            <td class="expense-amount">@expense.Amount.ToString("C")</td>
+                            <td class="text-end">
+                                <a class="btn btn-sm btn-outline-primary me-2"
+                                   href="@Url.Action("Edit", "Home", new { id = expense.Id, Model.Query.Search, Model.Query.Category, Model.Query.FromDate, Model.Query.ToDate, Model.Query.SortBy, Model.Query.Descending, Model.Query.Page, Model.Query.PageSize })">Edit</a>
+                                <form asp-action="Delete" asp-controller="Home" asp-route-id="@expense.Id"
+                                      asp-route-search="@Model.Query.Search"
+                                      asp-route-category="@Model.Query.Category"
+                                      asp-route-fromDate="@Model.Query.FromDate"
+                                      asp-route-toDate="@Model.Query.ToDate"
+                                      asp-route-sortBy="@Model.Query.SortBy"
+                                      asp-route-descending="@Model.Query.Descending"
+                                      asp-route-page="@Model.Query.Page"
+                                      asp-route-pageSize="@Model.Query.PageSize"
+                                      method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this expense?');">
+                                    @Html.AntiForgeryToken()
+                                    <button class="btn btn-sm btn-outline-danger" type="submit">Delete</button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pager-row">
+            <a class="btn btn-sm btn-outline-secondary @(Model.HasPreviousPage ? "" : "disabled")"
+               href="@Url.Action("Index", "Home", new { Model.Query.Search, Model.Query.Category, Model.Query.FromDate, Model.Query.ToDate, Model.Query.SortBy, Model.Query.Descending, Page = Math.Max(1, Model.Query.Page - 1), Model.Query.PageSize })">
+                Previous
+            </a>
+            <span class="text-muted small">Page @((Model.Query.Page <= 0) ? 1 : Model.Query.Page)</span>
+            <a class="btn btn-sm btn-outline-secondary @(Model.HasNextPage ? "" : "disabled")"
+               href="@Url.Action("Index", "Home", new { Model.Query.Search, Model.Query.Category, Model.Query.FromDate, Model.Query.ToDate, Model.Query.SortBy, Model.Query.Descending, Page = (Model.Query.Page <= 0 ? 1 : Model.Query.Page + 1), Model.Query.PageSize })">
+                Next
+            </a>
+        </div>
+    </section>
+</div>

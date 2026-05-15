@@ -1,0 +1,59 @@
+@model EditExpenseFormModel
+@{
+    ViewData["Title"] = "Edit expense";
+    var returnQuery = ViewData["ReturnQuery"] as ExpenseTracker.Api.DTOs.ExpenseQueryOptions ?? new ExpenseTracker.Api.DTOs.ExpenseQueryOptions();
+}
+
+<div class="panel-card mx-auto" style="max-width: 760px;">
+    <div class="d-flex align-items-center justify-content-between mb-3">
+        <h2 class="panel-title mb-0">Edit expense</h2>
+        <a class="btn btn-outline-secondary btn-sm"
+           href="@Url.Action("Index", "Home", new { returnQuery.Search, returnQuery.Category, returnQuery.FromDate, returnQuery.ToDate, returnQuery.SortBy, returnQuery.Descending, returnQuery.Page, returnQuery.PageSize })">Back to dashboard</a>
+    </div>
+    <form asp-action="Update" asp-controller="Home" asp-route-id="@Model.Id"
+          asp-route-search="@returnQuery.Search"
+          asp-route-category="@returnQuery.Category"
+          asp-route-fromDate="@returnQuery.FromDate"
+          asp-route-toDate="@returnQuery.ToDate"
+          asp-route-sortBy="@returnQuery.SortBy"
+          asp-route-descending="@returnQuery.Descending"
+          asp-route-page="@returnQuery.Page"
+          asp-route-pageSize="@returnQuery.PageSize"
+          method="post" class="stack-form">
+        @Html.AntiForgeryToken()
+        <input type="hidden" asp-for="Id" />
+        <div>
+            <label asp-for="Title" class="form-label"></label>
+            <input asp-for="Title" class="form-control" />
+            <span asp-validation-for="Title" class="text-danger small"></span>
+        </div>
+        <div class="row g-3">
+            <div class="col-md-4">
+                <label asp-for="Amount" class="form-label"></label>
+                <input asp-for="Amount" class="form-control" type="number" step="0.01" />
+                <span asp-validation-for="Amount" class="text-danger small"></span>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="Category" class="form-label"></label>
+                <select asp-for="Category" class="form-select" asp-items="Html.GetEnumSelectList<ExpenseCategory>()"></select>
+            </div>
+            <div class="col-md-4">
+                <label asp-for="PaymentMode" class="form-label"></label>
+                <select asp-for="PaymentMode" class="form-select" asp-items="Html.GetEnumSelectList<PaymentMode>()"></select>
+            </div>
+        </div>
+        <div>
+            <label asp-for="ExpenseDate" class="form-label"></label>
+            <input asp-for="ExpenseDate" class="form-control" type="date" />
+        </div>
+        <div>
+            <label asp-for="Notes" class="form-label"></label>
+            <textarea asp-for="Notes" class="form-control" rows="4"></textarea>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" type="submit">Save changes</button>
+            <a class="btn btn-outline-secondary"
+               href="@Url.Action("Index", "Home", new { returnQuery.Search, returnQuery.Category, returnQuery.FromDate, returnQuery.ToDate, returnQuery.SortBy, returnQuery.Descending, returnQuery.Page, returnQuery.PageSize })">Cancel</a>
+        </div>
+    </form>
+</div>

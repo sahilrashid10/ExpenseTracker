@@ -1,0 +1,92 @@
+[
+  {
+    "id": "0bdd258d-db51-4a43-9ed8-84d581f65b70",
+    "title": "Lunch at office",
+    "amount": 15,
+    "category": "food",
+    "expenseDate": "2026-04-09T00:00:00",
+    "paymentMode": "card",
+    "notes": "Team lunch",
+    "createdAt": "2026-04-09T05:49:09.5665061Z"
+  },
+  {
+    "id": "f95b9f49-bfd2-4eda-8194-f3550d16dc27",
+    "title": "Metro card recharge",
+    "amount": 40,
+    "category": "travel",
+    "expenseDate": "2026-04-10T00:00:00Z",
+    "paymentMode": "upi",
+    "notes": "Commute",
+    "createdAt": "2026-04-10T05:49:09.566527Z"
+  },
+  {
+    "id": "e31112c5-ac7d-4cb0-80de-2cf587fc80ba",
+    "title": "Internet bill",
+    "amount": 799,
+    "category": "bills",
+    "expenseDate": "2026-04-11T00:00:00Z",
+    "paymentMode": "cash",
+    "notes": "Monthly bill",
+    "createdAt": "2026-04-11T05:49:09.5665273Z"
+  },
+  {
+    "id": "04bc9adf-edc3-404b-8567-c8ef40c79644",
+    "title": "Desk organizer",
+    "amount": 125,
+    "category": "shopping",
+    "expenseDate": "2026-04-11T00:00:00Z",
+    "paymentMode": "card",
+    "notes": "Workspace item",
+    "createdAt": "2026-04-11T05:49:09.5665276Z"
+  },
+  {
+    "id": "b6961f90-4094-46f6-8a44-e9619966cd8d",
+    "title": "werg",
+    "amount": 234,
+    "category": "other",
+    "expenseDate": "2026-04-11T00:00:00",
+    "paymentMode": "cash",
+    "notes": null,
+    "createdAt": "2026-04-11T06:01:03.6416571Z"
+  },
+  {
+    "id": "7cf192e9-66a7-4669-92fc-e952313ad9cd",
+    "title": "Test",
+    "amount": 1,
+    "category": "bills",
+    "expenseDate": "2026-04-11T00:00:00",
+    "paymentMode": "cash",
+    "notes": null,
+    "createdAt": "2026-04-11T06:49:22.1239908Z"
+  },
+  {
+    "id": "85d31e95-1933-4268-93c7-9cb1be2587df",
+    "title": "Test3",
+    "amount": 11,
+    "category": "travel",
+    "expenseDate": "2026-05-14T00:00:00",
+    "paymentMode": "cash",
+    "notes": null,
+    "createdAt": "2026-04-11T06:59:25.3359705Z"
+  },
+  {
+    "id": "58c2e9a3-2ed9-4455-b035-c302da1efb1c",
+    "title": "Test45",
+    "amount": 22,
+    "category": "other",
+    "expenseDate": "2026-05-11T00:00:00",
+    "paymentMode": "cash",
+    "notes": null,
+    "createdAt": "2026-04-11T06:59:54.2694031Z"
+  },
+  {
+    "id": "4de2c46a-94d3-445d-b400-f2356ad81f44",
+    "title": "Test23",
+    "amount": 233,
+    "category": "food",
+    "expenseDate": "2026-01-11T00:00:00",
+    "paymentMode": "card",
+    "notes": null,
+    "createdAt": "2026-04-11T07:03:01.5530849Z"
+  }
+]
