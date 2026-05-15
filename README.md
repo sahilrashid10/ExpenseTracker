@@ -17,10 +17,14 @@ Expense Tracker is an ASP.NET Core web app that combines a REST API with a Razor
 ![Home Dashboard](./Images/homepage.png)
 
 ### Summary API
-![Summary API](./Images/Report.png)
+![Summary API](./Images/API_Output.png)
 
 ### Analytics Dashboard
 ![Analytics Dashboard](./Images/Dashboard.png)
+
+### Analytics Graphs
+![Analytics Graphs](./Images/Analytics.png)
+![Analytics Graphs](./Images/Analytics_Graphs.png)
 
 ## Tech Stack
 
